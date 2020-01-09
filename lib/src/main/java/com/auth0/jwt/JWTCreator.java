@@ -10,10 +10,12 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
+import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.apache.commons.codec.binary.Base64;
 
 import java.nio.charset.StandardCharsets;
-import java.util.Date;
+import java.time.Instant;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -34,6 +36,8 @@ public final class JWTCreator {
             SimpleModule module = new SimpleModule();
             module.addSerializer(ClaimsHolder.class, new PayloadSerializer());
             mapper.registerModule(module);
+            mapper.registerModule(new Jdk8Module());
+            mapper.registerModule(new JavaTimeModule());
             mapper.configure(MapperFeature.SORT_PROPERTIES_ALPHABETICALLY, true);
             headerJson = mapper.writeValueAsString(headerClaims);
             payloadJson = mapper.writeValueAsString(new ClaimsHolder(payloadClaims));
@@ -139,7 +143,7 @@ public final class JWTCreator {
          * @param expiresAt the Expires At value.
          * @return this same Builder instance.
          */
-        public Builder withExpiresAt(Date expiresAt) {
+        public Builder withExpiresAt(Instant expiresAt) {
             addClaim(PublicClaims.EXPIRES_AT, expiresAt);
             return this;
         }
@@ -150,7 +154,7 @@ public final class JWTCreator {
          * @param notBefore the Not Before value.
          * @return this same Builder instance.
          */
-        public Builder withNotBefore(Date notBefore) {
+        public Builder withNotBefore(Instant notBefore) {
             addClaim(PublicClaims.NOT_BEFORE, notBefore);
             return this;
         }
@@ -161,7 +165,7 @@ public final class JWTCreator {
          * @param issuedAt the Issued At value.
          * @return this same Builder instance.
          */
-        public Builder withIssuedAt(Date issuedAt) {
+        public Builder withIssuedAt(Instant issuedAt) {
             addClaim(PublicClaims.ISSUED_AT, issuedAt);
             return this;
         }
@@ -255,7 +259,7 @@ public final class JWTCreator {
          * @return this same Builder instance.
          * @throws IllegalArgumentException if the name is null.
          */
-        public Builder withClaim(String name, Date value) throws IllegalArgumentException {
+        public Builder withClaim(String name, Instant value) throws IllegalArgumentException {
             assertNonNull(name);
             addClaim(name, value);
             return this;

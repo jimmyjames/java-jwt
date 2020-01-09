@@ -86,7 +86,7 @@ public class PayloadSerializerTest {
         serializer.serialize(holder, jsonGenerator, serializerProvider);
         jsonGenerator.flush();
 
-        assertThat(writer.toString(), is(equalTo("{\"nbf\":1478874}")));
+        assertThat(writer.toString(), is(equalTo("{\"nbf\":1478874000}")));
     }
 
     @Test
@@ -95,7 +95,7 @@ public class PayloadSerializerTest {
         serializer.serialize(holder, jsonGenerator, serializerProvider);
         jsonGenerator.flush();
 
-        assertThat(writer.toString(), is(equalTo("{\"iat\":1478874}")));
+        assertThat(writer.toString(), is(equalTo("{\"iat\":1478874000}")));
     }
 
     @Test
@@ -104,7 +104,7 @@ public class PayloadSerializerTest {
         serializer.serialize(holder, jsonGenerator, serializerProvider);
         jsonGenerator.flush();
 
-        assertThat(writer.toString(), is(equalTo("{\"exp\":1478874}")));
+        assertThat(writer.toString(), is(equalTo("{\"exp\":1478874000}")));
     }
 
     @Test
@@ -113,7 +113,7 @@ public class PayloadSerializerTest {
         serializer.serialize(holder, jsonGenerator, serializerProvider);
         jsonGenerator.flush();
 
-        assertThat(writer.toString(), is(equalTo("{\"birthdate\":1478874}")));
+        assertThat(writer.toString(), is(equalTo("{\"birthdate\":1478874000}")));
     }
 
     @Test

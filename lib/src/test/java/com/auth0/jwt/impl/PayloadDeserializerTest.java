@@ -19,6 +19,7 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
 import java.io.StringReader;
+import java.time.Instant;
 import java.util.*;
 
 import static org.hamcrest.Matchers.*;
@@ -93,9 +94,12 @@ public class PayloadDeserializerTest {
         assertThat(payload.getIssuer(), is("auth0"));
         assertThat(payload.getSubject(), is("emails"));
         assertThat(payload.getAudience(), is(IsCollectionContaining.hasItem("users")));
-        assertThat(payload.getIssuedAt().getTime(), is(10101010L * 1000));
-        assertThat(payload.getExpiresAt().getTime(), is(11111111L * 1000));
-        assertThat(payload.getNotBefore().getTime(), is(10101011L * 1000));
+        assertThat(payload.getIssuedAt().getEpochSecond(), is(10101010L));
+        assertThat(payload.getExpiresAt().getEpochSecond(), is(11111111L));
+        assertThat(payload.getNotBefore().getEpochSecond(), is(10101011L));
+//        assertThat(payload.getIssuedAt().getTime(), is(10101010L * 1000));
+//        assertThat(payload.getExpiresAt().getTime(), is(11111111L * 1000));
+//        assertThat(payload.getNotBefore().getTime(), is(10101011L * 1000));
         assertThat(payload.getId(), is("idid"));
 
         assertThat(payload.getClaim("roles").asString(), is("admin"));
@@ -184,7 +188,7 @@ public class PayloadDeserializerTest {
         NullNode node = NullNode.getInstance();
         tree.put("key", node);
 
-        Date date = deserializer.getDateFromSeconds(tree, "key");
+        Instant date = deserializer.getInstantFromSeconds(tree, "key");
         assertThat(date, is(nullValue()));
     }
 
@@ -193,8 +197,8 @@ public class PayloadDeserializerTest {
         Map<String, JsonNode> tree = new HashMap<>();
         tree.put("key", null);
 
-        Date date = deserializer.getDateFromSeconds(tree, "key");
-        assertThat(date, is(nullValue()));
+        Instant instant  = deserializer.getInstantFromSeconds(tree, "key");
+        assertThat(instant, is(nullValue()));
     }
 
     @Test
@@ -206,7 +210,7 @@ public class PayloadDeserializerTest {
         TextNode node = new TextNode("123456789");
         tree.put("key", node);
 
-        deserializer.getDateFromSeconds(tree, "key");
+        deserializer.getInstantFromSeconds(tree, "key");
     }
 
     @Test
@@ -216,9 +220,11 @@ public class PayloadDeserializerTest {
         LongNode node = new LongNode(seconds);
         tree.put("key", node);
 
-        Date date = deserializer.getDateFromSeconds(tree, "key");
-        assertThat(date, is(notNullValue()));
-        assertThat(date.getTime(), is(seconds * 1000));
+        Instant instant = deserializer.getInstantFromSeconds(tree, "key");
+        assertThat(instant, is(notNullValue()));
+
+        // TODO need to check ms-level like before?
+        assertThat(instant.getEpochSecond(), is(seconds));
     }
 
     @Test
@@ -228,10 +234,10 @@ public class PayloadDeserializerTest {
         LongNode node = new LongNode(seconds);
         tree.put("key", node);
 
-        Date date = deserializer.getDateFromSeconds(tree, "key");
-        assertThat(date, is(notNullValue()));
-        assertThat(date.getTime(), is(seconds * 1000));
-        assertThat(date.getTime(), is(2147493647L * 1000));
+        Instant instant = deserializer.getInstantFromSeconds(tree, "key");
+        assertThat(instant, is(notNullValue()));
+        assertThat(instant.toEpochMilli(), is(seconds * 1000));
+        assertThat(instant.toEpochMilli(), is(2147493647L * 1000));
     }
 
     @Test

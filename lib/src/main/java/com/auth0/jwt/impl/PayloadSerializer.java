@@ -5,7 +5,7 @@ import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.ser.std.StdSerializer;
 
 import java.io.IOException;
-import java.util.Date;
+import java.time.Instant;
 import java.util.Map;
 
 public class PayloadSerializer extends StdSerializer<ClaimsHolder> {
@@ -45,8 +45,8 @@ public class PayloadSerializer extends StdSerializer<ClaimsHolder> {
                     break;
                 default:
                     gen.writeFieldName(e.getKey());
-                    if (e.getValue() instanceof Date) { // true for EXPIRES_AT, ISSUED_AT, NOT_BEFORE
-                        gen.writeNumber(dateToSeconds((Date) e.getValue()));
+                    if (e.getValue() instanceof Instant) { // true for EXPIRES_AT, ISSUED_AT, NOT_BEFORE
+                        gen.writeNumber(instantToSeconds((Instant) e.getValue()));
                     } else {
                         gen.writeObject(e.getValue());
                     }
@@ -57,7 +57,7 @@ public class PayloadSerializer extends StdSerializer<ClaimsHolder> {
         gen.writeEndObject();
     }
 
-    private long dateToSeconds(Date date) {
-        return date.getTime() / 1000;
+    private long instantToSeconds(Instant instant) {
+        return instant.getEpochSecond();
     }
 }

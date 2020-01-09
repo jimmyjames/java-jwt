@@ -20,10 +20,10 @@ import org.junit.rules.ExpectedException;
 import org.mockito.ArgumentMatchers;
 
 import java.io.IOException;
+import java.time.Instant;
 import java.util.*;
 
 import static com.auth0.jwt.impl.JWTParser.getDefaultObjectMapper;
-import static com.auth0.jwt.impl.JsonNodeClaim.claimFromNode;
 import static org.hamcrest.Matchers.*;
 import static org.hamcrest.core.IsNull.notNullValue;
 import static org.hamcrest.core.IsNull.nullValue;
@@ -121,16 +121,16 @@ public class JsonNodeClaimTest {
         JsonNode value = mapper.valueToTree(1476824844L);
         Claim claim = claimFromNode(value);
 
-        assertThat(claim.asDate(), is(notNullValue()));
-        assertThat(claim.asDate(), is(new Date(1476824844L * 1000)));
+        assertThat(claim.asInstant(), is(notNullValue()));
+        assertThat(claim.asInstant(), is(Instant.ofEpochSecond(1476824844L)));
     }
 
     @Test
     public void shouldGetNullDateIfNotDateValue() throws Exception {
         JsonNode objectValue = mapper.valueToTree(new Object());
-        assertThat(claimFromNode(objectValue).asDate(), is(nullValue()));
+        assertThat(claimFromNode(objectValue).asInstant(), is(nullValue()));
         JsonNode stringValue = mapper.valueToTree("1476824844");
-        assertThat(claimFromNode(stringValue).asDate(), is(nullValue()));
+        assertThat(claimFromNode(stringValue).asInstant(), is(nullValue()));
     }
 
     @Test
