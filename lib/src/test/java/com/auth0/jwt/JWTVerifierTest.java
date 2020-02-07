@@ -216,7 +216,7 @@ public class JWTVerifierTest {
 
 
     @Test
-    public void shouldThrowOnInvalidCustomClaimValueOfTypeDate() throws Exception {
+    public void shouldThrowOnInvalidCustomClaimValueOfTypeInstant() throws Exception {
         exception.expect(InvalidClaimException.class);
         exception.expectMessage("The Claim 'name' value doesn't match the required one.");
         String token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjpbInNvbWV0aGluZyJdfQ.3ENLez6tU_fG0SVFrGmISltZPiXLSHaz_dyn-XFTEGQ";
@@ -293,7 +293,7 @@ public class JWTVerifierTest {
     }
 
     @Test
-    public void shouldValidateCustomClaimOfTypeDate() throws Exception {
+    public void shouldValidateCustomClaimOfTypeInstant() throws Exception {
         String token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoxNDc4ODkxNTIxfQ.mhioumeok8fghQEhTKF3QtQAksSvZ_9wIhJmgZLhJ6c";
         Instant instant = Instant.ofEpochMilli(1478891521000L);
         DecodedJWT jwt = JWTVerifier.init(Algorithm.HMAC256("secret"))
