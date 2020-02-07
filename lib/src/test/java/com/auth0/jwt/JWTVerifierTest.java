@@ -155,7 +155,7 @@ public class JWTVerifierTest {
         Algorithm algorithm = mock(Algorithm.class);
         JWTVerifier verifier = JWTVerifier.init(algorithm)
                 .withAudience("John")
-                .withAudience(null)
+                .withAudience((String[]) null)
                 .build();
 
         assertThat(verifier.claims, is(notNullValue()));
@@ -619,7 +619,7 @@ public class JWTVerifierTest {
         Algorithm algorithm = mock(Algorithm.class);
         JWTVerifier verifier = JWTVerifier.init(algorithm)
                 .withIssuer("iss")
-                .withIssuer(null)
+                .withIssuer((String[])null)
                 .build();
 
         assertThat(verifier.claims, is(notNullValue()));
