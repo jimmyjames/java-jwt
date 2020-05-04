@@ -17,5 +17,7 @@ public interface PublicClaims {
     String ISSUED_AT = "iat";
     String JWT_ID = "jti";
     String AUDIENCE = "aud";
-
+    String NONCE = "nonce";
+    String AZP = "azp";
+    String AUTH_TIME = "auth_time";
 }
